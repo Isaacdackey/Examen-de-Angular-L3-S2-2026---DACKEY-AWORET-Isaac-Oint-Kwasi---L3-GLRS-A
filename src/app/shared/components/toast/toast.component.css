@@ -1,0 +1,162 @@
+.toast-container {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.toast-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease-out;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.toast-item::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  animation: progress 5s linear forwards;
+}
+
+.toast-success {
+  background: #d4edda;
+  border-left: 4px solid #28a745;
+}
+
+.toast-success::before {
+  background: #28a745;
+}
+
+.toast-error {
+  background: #f8d7da;
+  border-left: 4px solid #dc3545;
+}
+
+.toast-error::before {
+  background: #dc3545;
+}
+
+.toast-warning {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+
+.toast-warning::before {
+  background: #ffc107;
+}
+
+.toast-info {
+  background: #d1ecf1;
+  border-left: 4px solid #17a2b8;
+}
+
+.toast-info::before {
+  background: #17a2b8;
+}
+
+.toast-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.toast-success .toast-icon {
+  background: #28a745;
+  color: white;
+}
+
+.toast-error .toast-icon {
+  background: #dc3545;
+  color: white;
+}
+
+.toast-warning .toast-icon {
+  background: #ffc107;
+  color: #333;
+}
+
+.toast-info .toast-icon {
+  background: #17a2b8;
+  color: white;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+  color: #333;
+}
+
+.toast-message {
+  font-size: 0.9rem;
+  color: #555;
+  word-break: break-word;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #999;
+  padding: 0;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.toast-close:hover {
+  color: #333;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+@media (max-width: 480px) {
+  .toast-container {
+    top: 70px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+}

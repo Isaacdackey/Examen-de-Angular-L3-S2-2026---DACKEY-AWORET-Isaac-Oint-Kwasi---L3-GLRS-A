@@ -1,0 +1,72 @@
+<div class="bills-history-container">
+  <div class="page-header">
+    <div class="header-left">
+      <h1><i class="fas fa-history"></i> Historique des factures</h1>
+      <p class="subtitle"><i class="fas fa-info-circle"></i> Consultez l'historique complet de vos factures</p>
+    </div>
+    <button class="btn-refresh" (click)="refreshHistory()">
+      <i class="fas fa-sync-alt"></i> Actualiser
+    </button>
+  </div>
+
+  <div class="summary-cards">
+    <div class="summary-card">
+      <span class="summary-label"><i class="fas fa-file-invoice"></i> Total factures</span>
+      <span class="summary-value">{{ bills.length }}</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label"><i class="fas fa-check-circle"></i> Payées</span>
+      <span class="summary-value credit">{{ getPaidCount() }}</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label"><i class="fas fa-exclamation-triangle"></i> Impayées</span>
+      <span class="summary-value warning">{{ getUnpaidCount() }}</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label"><i class="fas fa-money-bill-wave"></i> Montant payé</span>
+      <span class="summary-value credit">{{ getTotalPaid() | xof }}</span>
+    </div>
+  </div>
+
+  <div class="filters-section">
+    <div class="filter-group">
+      <label><i class="fas fa-filter"></i> Service</label>
+      <select [(ngModel)]="selectedService" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let service of services" [value]="service.value">
+          {{ service.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label><i class="fas fa-calendar-alt"></i> Date début</label>
+      <input 
+        type="date" 
+        [(ngModel)]="startDate" 
+        (change)="onFilterChange()"
+        class="filter-input"
+      >
+    </div>
+
+    <div class="filter-group">
+      <label><i class="fas fa-calendar-alt"></i> Date fin</label>
+      <input 
+        type="date" 
+        [(ngModel)]="endDate" 
+        (change)="onFilterChange()"
+        class="filter-input"
+      >
+    </div>
+
+    <button class="btn-reset" (click)="resetFilters()"><i class="fas fa-undo"></i> Réinitialiser</button>
+  </div>
+
+  <app-bills-list
+    [bills]="filteredBills"
+    [loading]="loading"
+    [showSelection]="false"
+    [showActions]="true"
+    title="Historique des factures"
+    (viewBill)="viewBill($event)"
+  ></app-bills-list>
+</div>

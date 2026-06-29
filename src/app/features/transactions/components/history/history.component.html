@@ -1,0 +1,110 @@
+<div class="history-container">
+  <div class="page-header">
+    <h1><i class="fas fa-history"></i> Historique des transactions</h1>
+    <button class="btn-refresh" (click)="loadTransactions()">
+      <i class="fas fa-sync-alt"></i> Actualiser
+    </button>
+  </div>
+
+  <div class="stats-cards" *ngIf="!loading">
+    <div class="stat-card">
+      <span class="stat-label"><i class="fas fa-arrow-down"></i> Total des dépôts</span>
+      <span class="stat-value credit">{{ getTotalDeposits() | xof }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label"><i class="fas fa-arrow-up"></i> Total des retraits</span>
+      <span class="stat-value debit">{{ getTotalWithdrawals() | xof }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label"><i class="fas fa-exchange-alt"></i> Nombre de transactions</span>
+      <span class="stat-value">{{ transactions.length }}</span>
+    </div>
+  </div>
+
+  <div class="filters-section">
+    <div class="filter-group">
+      <label><i class="fas fa-filter"></i> Type</label>
+      <select [(ngModel)]="filterType" (change)="applyFilters()" class="filter-select">
+        <option *ngFor="let type of transactionTypes" [value]="type.value">
+          {{ type.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label><i class="fas fa-search"></i> Recherche</label>
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="applyFilters()"
+        placeholder="Description ou téléphone..."
+        class="filter-input"
+      >
+    </div>
+
+    <div class="filter-group">
+      <label><i class="fas fa-calendar-alt"></i> Date début</label>
+      <input 
+        type="date" 
+        [(ngModel)]="startDate" 
+        (change)="applyFilters()"
+        class="filter-input"
+      >
+    </div>
+
+    <div class="filter-group">
+      <label><i class="fas fa-calendar-alt"></i> Date fin</label>
+      <input 
+        type="date" 
+        [(ngModel)]="endDate" 
+        (change)="applyFilters()"
+        class="filter-input"
+      >
+    </div>
+
+    <button class="btn-reset" (click)="resetFilters()"><i class="fas fa-undo"></i> Réinitialiser</button>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p><i class="fas fa-spinner fa-spin"></i> Chargement des transactions...</p>
+  </div>
+
+  <div class="table-container" *ngIf="!loading && filteredTransactions.length > 0">
+    <table class="table">
+      <thead>
+        <tr>
+          <th><i class="fas fa-tag"></i> Type</th>
+          <th><i class="fas fa-info-circle"></i> Description</th>
+          <th><i class="fas fa-money-bill-wave"></i> Montant</th>
+          <th><i class="fas fa-coins"></i> Frais</th>
+          <th><i class="fas fa-calendar"></i> Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tx of filteredTransactions">
+          <td>
+            <span class="tx-type" [class]="getTransactionClass(tx.type)">
+              <i [class]="getTransactionIcon(tx.type)"></i> {{ getTransactionLabel(tx.type) }}
+            </span>
+          </td>
+          <td>{{ tx.description }}</td>
+          <td>
+            <span class="tx-amount" [class.credit]="getTransactionClass(tx.type) === 'credit'" 
+                 [class.debit]="getTransactionClass(tx.type) === 'debit'">
+              {{ tx.amount | xof }}
+            </span>
+          </td>
+          <td>{{ tx.fees > 0 ? (tx.fees | xof) : '-' }}</td>
+          <td>{{ tx.createdAt | dateFormat:'full' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && filteredTransactions.length === 0">
+    <i class="fas fa-inbox empty-icon"></i>
+    <p>Aucune transaction trouvée</p>
+    <span class="empty-sub">Essayez de modifier vos filtres</span>
+  </div>
+</div>

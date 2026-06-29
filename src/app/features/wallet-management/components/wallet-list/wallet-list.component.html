@@ -1,0 +1,85 @@
+<div class="wallet-list-container">
+  <div class="page-header">
+    <h1><i class="fas fa-wallet"></i> Gestion des portefeuilles</h1>
+    <a routerLink="/admin/wallets/create" class="btn-primary">
+      <i class="fas fa-plus"></i> Nouveau portefeuille
+    </a>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        placeholder="Rechercher par téléphone..." 
+        class="search-input"
+        #searchInput
+        (keyup.enter)="searchWallet(searchInput.value)"
+      >
+      <button class="search-btn" (click)="searchWallet(searchInput.value)">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th><i class="fas fa-tag"></i> Code</th>
+          <th><i class="fas fa-user"></i> Client</th>
+          <th><i class="fas fa-phone"></i> Téléphone</th>
+          <th><i class="fas fa-envelope"></i> Email</th>
+          <th><i class="fas fa-money-bill-wave"></i> Solde</th>
+          <th><i class="fas fa-calendar"></i> Date création</th>
+          <th><i class="fas fa-cogs"></i> Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let wallet of wallets">
+          <td><span class="wallet-code">{{ wallet.code }}</span></td>
+          <td>{{ wallet.email | truncate:20 }}</td>
+          <td>{{ wallet.phoneNumber | phoneFormat }}</td>
+          <td>{{ wallet.email }}</td>
+          <td><span class="balance">{{ wallet.balance | xof }}</span></td>
+          <td>{{ wallet.createdAt | dateFormat:'short' }}</td>
+          <td>
+            <div class="actions">
+              <button class="action-btn view" title="Voir" (click)="viewWallet(wallet.id)">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn deposit" title="Dépot" (click)="openDeposit(wallet.id)">
+                <i class="fas fa-plus-circle"></i>
+              </button>
+              <button class="action-btn withdraw" title="Retrait" (click)="openWithdraw(wallet.phoneNumber)">
+                <i class="fas fa-minus-circle"></i>
+              </button>
+              <button class="action-btn delete" title="Supprimer" (click)="deleteWallet(wallet.id)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="wallets.length === 0">
+          <td colspan="7" class="empty-state">
+            <i class="fas fa-inbox"></i> Aucun portefeuille trouvé
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"><i class="fas fa-spinner fa-spin"></i></div>
+    <p>Chargement des portefeuilles...</p>
+  </div>
+
+  <app-pagination
+    *ngIf="totalPages > 0 && !loading"
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [totalItems]="totalItems"
+    [pageSize]="pageSize"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  ></app-pagination>
+</div>

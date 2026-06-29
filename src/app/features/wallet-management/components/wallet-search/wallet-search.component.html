@@ -1,0 +1,85 @@
+<div class="wallet-search-container">
+  <div class="page-header">
+    <h1><i class="fas fa-search"></i> Rechercher un client</h1>
+  </div>
+
+  <div class="search-card">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchPhone"
+        placeholder="Entrez le numéro de téléphone (+221 77 000 00 01)"
+        class="search-input"
+        (keyup.enter)="searchWallet()"
+      >
+      <button class="search-btn" (click)="searchWallet()" [disabled]="loading">
+        <i class="fas fa-search"></i>
+        {{ loading ? 'Recherche...' : 'Rechercher' }}
+      </button>
+      <button class="clear-btn" *ngIf="searchPhone" (click)="clearSearch()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"><i class="fas fa-spinner fa-spin"></i></div>
+    <p><i class="fas fa-hourglass-half"></i> Recherche en cours...</p>
+  </div>
+
+  <div class="result-card" *ngIf="wallet && !loading">
+    <div class="result-header">
+      <h2><i class="fas fa-wallet"></i> Portefeuille trouvé</h2>
+      <span class="wallet-status"><i class="fas fa-check-circle"></i> Actif</span>
+    </div>
+
+    <div class="wallet-details">
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-tag"></i> Code</span>
+        <span class="detail-value">{{ wallet.code }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-user"></i> Client</span>
+        <span class="detail-value">{{ wallet.email }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-phone"></i> Téléphone</span>
+        <span class="detail-value">{{ wallet.phoneNumber | phoneFormat }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-envelope"></i> Email</span>
+        <span class="detail-value">{{ wallet.email }}</span>
+      </div>
+      <div class="detail-row highlight">
+        <span class="detail-label"><i class="fas fa-money-bill-wave"></i> Solde</span>
+        <span class="detail-value balance">{{ wallet.balance | xof }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-coins"></i> Devise</span>
+        <span class="detail-value">{{ wallet.currency }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-calendar-alt"></i> Date création</span>
+        <span class="detail-value">{{ wallet.createdAt | dateFormat:'long' }}</span>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button class="action-btn deposit" (click)="openDeposit(wallet.id)">
+        <i class="fas fa-plus-circle"></i> Dépot
+      </button>
+      <button class="action-btn withdraw" (click)="openWithdraw(wallet.phoneNumber)">
+        <i class="fas fa-minus-circle"></i> Retrait
+      </button>
+      <button class="action-btn transactions" (click)="viewTransactions(wallet.phoneNumber)">
+        <i class="fas fa-list"></i> Transactions
+      </button>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="searched && !wallet && !loading">
+    <i class="fas fa-inbox empty-icon"></i>
+    <p>Aucun portefeuille trouvé</p>
+    <span class="empty-sub">Vérifiez le numéro et réessayez</span>
+  </div>
+</div>

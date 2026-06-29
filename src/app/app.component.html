@@ -1,0 +1,23 @@
+<app-loader></app-loader>
+<app-toast></app-toast>
+
+<div class="app-container">
+  <app-header></app-header>
+  
+  <div class="app-body">
+    <app-sidebar *ngIf="isAuthenticated" [class.collapsed]="isSidebarCollapsed"></app-sidebar>
+    
+    <main class="main-content" [class.expanded]="isSidebarCollapsed || !isAuthenticated">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+        
+        <footer class="app-footer">
+          <div class="footer-content">
+            <span>&copy; {{ currentYear }} BadWallet - Tous droits reserves</span>
+            <span class="footer-version">v1.0.0</span>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+</div>

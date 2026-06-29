@@ -1,0 +1,52 @@
+<div class="pagination-container" *ngIf="totalPages > 0">
+  <div class="pagination-info" *ngIf="showTotalItems">
+    <span>
+      Affichage de {{ getStartItem() }} à {{ getEndItem() }} sur {{ totalItems }} éléments
+    </span>
+  </div>
+  
+  <div class="pagination-controls">
+    <button 
+      class="page-btn"
+      [disabled]="currentPage === 0"
+      (click)="onPageChange(currentPage - 1)"
+      type="button"
+    >
+      ‹
+    </button>
+    
+    <ng-container *ngFor="let page of pageNumbers()">
+      <button 
+        *ngIf="page !== '...'"
+        class="page-btn"
+        [class.active]="page === currentPage"
+        (click)="onPageChange(page)"
+        type="button"
+      >
+        {{ displayPage(page) }}
+      </button>
+      <span *ngIf="page === '...'" class="page-dots">…</span>
+    </ng-container>
+    
+    <button 
+      class="page-btn"
+      [disabled]="currentPage === totalPages - 1"
+      (click)="onPageChange(currentPage + 1)"
+      type="button"
+    >
+      ›
+    </button>
+  </div>
+  
+  <div class="pagination-size" *ngIf="showPageSize">
+    <select 
+      [value]="pageSize" 
+      (change)="onPageSizeChange($event)"
+      class="page-select"
+    >
+      <option *ngFor="let size of pageSizeOptions" [value]="size">
+        {{ size }} par page
+      </option>
+    </select>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="toast-container">
+  <div 
+    *ngFor="let toast of notificationService.toasts(); let i = index"
+    class="toast-item {{ getClass(toast.type) }}"
+    [class.toast-enter]="true"
+  >
+    <div class="toast-icon">
+      <span>{{ getIcon(toast.type) }}</span>
+    </div>
+    <div class="toast-content">
+      <div class="toast-title" *ngIf="toast.title">{{ toast.title }}</div>
+      <div class="toast-message">{{ toast.message }}</div>
+    </div>
+    <button class="toast-close" (click)="notificationService.removeToast(toast.id)">
+      ✕
+    </button>
+  </div>
+</div>

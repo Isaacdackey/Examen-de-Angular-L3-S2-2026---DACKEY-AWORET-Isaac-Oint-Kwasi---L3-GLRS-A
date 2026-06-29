@@ -1,0 +1,59 @@
+<div class="current-bills-container">
+  <div class="page-header">
+    <div class="header-left">
+      <h1><i class="fas fa-file-invoice"></i> Factures du mois</h1>
+      <p class="subtitle"><i class="fas fa-info-circle"></i> Factures impayées du mois en cours</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-refresh" (click)="refreshBills()">
+        <i class="fas fa-sync-alt"></i> Actualiser
+      </button>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="summary-card">
+      <span class="summary-label"><i class="fas fa-file-invoice"></i> Total factures</span>
+      <span class="summary-value">{{ bills.length }}</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label"><i class="fas fa-exclamation-triangle"></i> Impayées</span>
+      <span class="summary-value warning">{{ getUnpaidCount() }}</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label"><i class="fas fa-money-bill-wave"></i> Montant total</span>
+      <span class="summary-value">{{ getTotalUnpaid() | xof }}</span>
+    </div>
+    <div class="summary-card">
+      <span class="summary-label"><i class="fas fa-wallet"></i> Solde disponible</span>
+      <span class="summary-value credit">{{ balanceStore.balance() | xof }}</span>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <label><i class="fas fa-filter"></i> Filtrer par service</label>
+    <select [(ngModel)]="selectedService" (change)="onServiceChange()" class="filter-select">
+      <option *ngFor="let service of services" [value]="service.value">
+        {{ service.label }}
+      </option>
+    </select>
+  </div>
+
+  <app-bills-list
+    [bills]="filteredBills"
+    [loading]="loading"
+    [showSelection]="true"
+    [showActions]="true"
+    title="Factures du mois"
+    (billPay)="paySingleBill($event)"
+    (billsPay)="paySelectedBills($event)"
+    (viewBill)="viewBill($event)"
+  ></app-bills-list>
+
+  <div class="paying-overlay" *ngIf="isPaying">
+    <div class="paying-modal">
+      <div class="spinner"><i class="fas fa-spinner fa-spin"></i></div>
+      <p><i class="fas fa-hourglass-half"></i> Paiement en cours...</p>
+    </div>
+  </div>
+</div>

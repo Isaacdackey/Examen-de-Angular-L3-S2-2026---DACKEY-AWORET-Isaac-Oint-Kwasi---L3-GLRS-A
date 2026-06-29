@@ -1,0 +1,91 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-toggle" (click)="toggleCollapse()">
+    <i class="fas" [class.fa-chevron-left]="!isCollapsed" [class.fa-chevron-right]="isCollapsed"></i>
+  </div>
+  
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <!-- Client Routes -->
+      <li class="nav-item" *ngIf="isClient()">
+        <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
+          <i class="fas fa-chart-pie nav-icon"></i>
+          <span class="nav-text">Tableau de bord</span>
+        </a>
+      </li>
+      
+      <li class="nav-item" *ngIf="isClient()">
+        <a class="nav-link" routerLink="/transfer" routerLinkActive="active">
+          <i class="fas fa-paper-plane nav-icon"></i>
+          <span class="nav-text">Transfert</span>
+        </a>
+      </li>
+      
+      <li class="nav-item" *ngIf="isClient()">
+        <a class="nav-link" routerLink="/transactions" routerLinkActive="active">
+          <i class="fas fa-list nav-icon"></i>
+          <span class="nav-text">Historique</span>
+        </a>
+      </li>
+      
+      <li class="nav-item" *ngIf="isClient()">
+        <a class="nav-link" routerLink="/bills" routerLinkActive="active">
+          <i class="fas fa-file-invoice nav-icon"></i>
+          <span class="nav-text">Factures</span>
+        </a>
+      </li>
+      
+      <!-- Agent Routes -->
+      <li class="nav-divider" *ngIf="isAgent()"></li>
+      <li class="nav-header" *ngIf="isAgent()">
+        <span class="nav-header-text"><i class="fas fa-cog"></i> Administration</span>
+      </li>
+      
+      <li class="nav-item" *ngIf="isAgent()">
+        <a class="nav-link" routerLink="/admin/wallets" routerLinkActive="active">
+          <i class="fas fa-wallet nav-icon"></i>
+          <span class="nav-text">Portefeuilles</span>
+        </a>
+      </li>
+      
+      <li class="nav-item" *ngIf="isAgent()">
+        <a class="nav-link" routerLink="/admin/wallets/create" routerLinkActive="active">
+          <i class="fas fa-plus-circle nav-icon"></i>
+          <span class="nav-text">Creer un compte</span>
+        </a>
+      </li>
+      
+      <li class="nav-item" *ngIf="isAgent()">
+        <a class="nav-link" routerLink="/admin/wallets/search" routerLinkActive="active">
+          <i class="fas fa-search nav-icon"></i>
+          <span class="nav-text">Rechercher</span>
+        </a>
+      </li>
+      
+      <li class="nav-item" *ngIf="isAgent()">
+        <a class="nav-link" routerLink="/admin/wallets/withdraw" routerLinkActive="active">
+          <i class="fas fa-money-bill-wave nav-icon"></i>
+          <span class="nav-text">Retrait</span>
+        </a>
+      </li>
+      
+      <li class="nav-item" *ngIf="isAgent()">
+        <a class="nav-link" routerLink="/admin/wallets/:id/deposit" routerLinkActive="active">
+          <i class="fas fa-plus-circle nav-icon"></i>
+          <span class="nav-text">Dépot</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+  <div class="sidebar-footer">
+    <div class="user-profile">
+      <div class="user-avatar">
+        {{ getCurrentUser()?.email?.charAt(0)?.toUpperCase() || 'U' }}
+      </div>
+      <div class="user-details" *ngIf="!isCollapsed">
+        <div class="user-name"><i class="fas fa-user"></i> {{ getCurrentUser()?.email || 'Utilisateur' }}</div>
+        <div class="user-role"><i class="fas fa-user-tag"></i> {{ getCurrentUser()?.role || 'CLIENT' }}</div>
+      </div>
+    </div>
+  </div>
+</aside>

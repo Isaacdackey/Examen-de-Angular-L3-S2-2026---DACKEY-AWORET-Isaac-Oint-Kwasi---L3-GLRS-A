@@ -1,0 +1,48 @@
+<div class="deposit-container">
+  <div class="page-header">
+    <h1>Effectuer un dépot</h1>
+    <button class="btn-secondary" (click)="cancel()">← Retour</button>
+  </div>
+
+  <div class="form-card">
+    <form [formGroup]="depositForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="amount">Montant à déposer *</label>
+        <div class="input-group">
+          <input 
+            id="amount"
+            type="number" 
+            formControlName="amount"
+            class="form-control"
+            [class.invalid]="depositForm.get('amount')?.invalid && depositForm.get('amount')?.touched"
+            placeholder="0"
+            min="1"
+            step="100"
+          >
+          <span class="input-suffix">XOF</span>
+        </div>
+        <div class="error-message" *ngIf="depositForm.get('amount')?.invalid && depositForm.get('amount')?.touched">
+          {{ getErrorMessage('amount') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="paymentMethod">Mode de paiement</label>
+        <select id="paymentMethod" formControlName="paymentMethod" class="form-control">
+          <option value="CASH">💰 Espèces</option>
+          <option value="CREDIT_CARD">💳 Carte bancaire</option>
+          <option value="BANK_TRANSFER">🏦 Virement bancaire</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="cancel()">
+          Annuler
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="depositForm.invalid || isSubmitting">
+          {{ isSubmitting ? 'Traitement...' : 'Effectuer le dépot' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

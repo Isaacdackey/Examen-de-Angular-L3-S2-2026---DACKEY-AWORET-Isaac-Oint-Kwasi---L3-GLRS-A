@@ -1,0 +1,77 @@
+<div class="wallet-detail-container">
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">← Retour</button>
+    <h1>Détails du portefeuille</h1>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <ng-container *ngIf="!loading && wallet">
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="card-label">Solde</div>
+        <div class="card-value balance">{{ wallet.balance | xof }}</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-label">Code</div>
+        <div class="card-value">{{ wallet.code }}</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-label">Client</div>
+        <div class="card-value">{{ wallet.email }}</div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>Informations du compte</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Téléphone</span>
+          <span class="info-value">{{ wallet.phoneNumber | phoneFormat }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Email</span>
+          <span class="info-value">{{ wallet.email }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Devise</span>
+          <span class="info-value">{{ wallet.currency }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Date création</span>
+          <span class="info-value">{{ wallet.createdAt | dateFormat:'long' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions-card">
+      <h3>Actions rapides</h3>
+      <div class="actions-grid">
+        <button class="action-btn deposit">💰 Dépot</button>
+        <button class="action-btn withdraw">🏧 Retrait</button>
+        <button class="action-btn transfer">✈️ Transfert</button>
+      </div>
+    </div>
+
+    <div class="transactions-card" *ngIf="transactions.length > 0">
+      <h3>Historique des transactions</h3>
+      <div class="transaction-list">
+        <div *ngFor="let tx of transactions.slice(0, 10)" class="transaction-item">
+          <div class="tx-icon" [class.credit]="isCredit(tx)" [class.debit]="isDebit(tx)">
+            {{ getTransactionIcon(tx) }}
+          </div>
+          <div class="tx-details">
+            <div class="tx-description">{{ tx.description }}</div>
+            <div class="tx-date">{{ tx.createdAt | dateFormat:'full' }}</div>
+          </div>
+          <div class="tx-amount" [class.credit]="isCredit(tx)" [class.debit]="isDebit(tx)">
+            {{ tx.amount | xof }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

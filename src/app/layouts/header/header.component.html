@@ -1,0 +1,71 @@
+<header class="header">
+  <div class="header-content">
+    <div class="header-left">
+      <button class="mobile-toggle" (click)="toggleMobileMenu()" type="button">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <div class="logo" routerLink="/dashboard">
+        <i class="fas fa-wallet logo-icon"></i>
+        <span class="logo-text">BadWallet</span>
+      </div>
+    </div>
+    
+    <div class="header-center">
+      <div class="balance-display" *ngIf="isAuthenticated()">
+        <span class="balance-label"><i class="fas fa-coins"></i> Solde</span>
+        <span class="balance-value">{{ balanceStore.balance() | xof }}</span>
+        <button class="refresh-btn" (click)="balanceStore.refreshBalance()" title="Actualiser">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <div class="user-info" *ngIf="isAuthenticated()">
+        <span class="user-role">
+          <i class="fas fa-user-shield"></i>
+          {{ getCurrentUser()?.role | titlecase }}
+        </span>
+        <span class="user-phone">
+          <i class="fas fa-phone"></i>
+          {{ balanceStore.getCurrentPhone() | phoneFormat }}
+        </span>
+        <button class="logout-btn" (click)="logout()" title="Deconnexion">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+      
+      <div class="user-info" *ngIf="!isAuthenticated()">
+        <a routerLink="/login" class="login-link">
+          <i class="fas fa-sign-in-alt"></i> Se connecter
+        </a>
+        <a routerLink="/register" class="register-link">
+          <i class="fas fa-user-plus"></i> S'inscrire
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mobile-menu" *ngIf="isMobileMenuOpen && isAuthenticated()">
+    <a routerLink="/dashboard" (click)="toggleMobileMenu()">
+      <i class="fas fa-chart-pie"></i> Tableau de bord
+    </a>
+    <a routerLink="/transfer" (click)="toggleMobileMenu()">
+      <i class="fas fa-paper-plane"></i> Transfert
+    </a>
+    <a routerLink="/transactions" (click)="toggleMobileMenu()">
+      <i class="fas fa-list"></i> Historique
+    </a>
+    <a routerLink="/bills" (click)="toggleMobileMenu()">
+      <i class="fas fa-file-invoice"></i> Factures
+    </a>
+    <a *ngIf="getCurrentUser()?.role === 'AGENT' || getCurrentUser()?.role === 'ADMIN'" 
+       routerLink="/admin/wallets" (click)="toggleMobileMenu()">
+      <i class="fas fa-users-cog"></i> Administration
+    </a>
+    <a (click)="logout(); toggleMobileMenu()" class="logout-mobile">
+      <i class="fas fa-sign-out-alt"></i> Deconnexion
+    </a>
+  </div>
+</header>

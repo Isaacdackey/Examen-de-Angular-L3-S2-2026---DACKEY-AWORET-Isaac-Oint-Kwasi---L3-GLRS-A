@@ -1,0 +1,79 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <h1><i class="fas fa-wallet"></i> BadWallet</h1>
+      <p>Créez votre compte</p>
+    </div>
+    
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label><i class="fas fa-phone"></i> Numéro de téléphone</label>
+        <input 
+          type="text" 
+          formControlName="phoneNumber"
+          class="form-control"
+          placeholder="+221 77 XXX XX XX"
+        >
+        <div *ngIf="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched" class="error">
+          <i class="fas fa-exclamation-circle"></i> Numéro de téléphone invalide (format: +221 77 XXX XX XX)
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label><i class="fas fa-envelope"></i> Email</label>
+        <input 
+          type="email" 
+          formControlName="email"
+          class="form-control"
+          placeholder="votre@email.com"
+        >
+        <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
+          <i class="fas fa-exclamation-circle"></i> Email invalide
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label><i class="fas fa-lock"></i> Mot de passe</label>
+        <input 
+          type="password" 
+          formControlName="password"
+          class="form-control"
+          placeholder="Minimum 6 caractères"
+        >
+        <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
+          <i class="fas fa-exclamation-circle"></i> Le mot de passe doit contenir au moins 6 caractères
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label><i class="fas fa-check-circle"></i> Confirmer le mot de passe</label>
+        <input 
+          type="password" 
+          formControlName="confirmPassword"
+          class="form-control"
+          placeholder="Confirmez votre mot de passe"
+        >
+        <div *ngIf="registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched" class="error">
+          <i class="fas fa-exclamation-circle"></i> Les mots de passe ne correspondent pas
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label><i class="fas fa-user-tag"></i> Type de compte</label>
+        <select formControlName="role" class="form-control">
+          <option value="CLIENT"><i class="fas fa-user"></i> Client</option>
+          <option value="AGENT"><i class="fas fa-user-tie"></i> Agent</option>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn-primary" [disabled]="registerForm.invalid || isLoading">
+        <i class="fas" [class.fa-spinner]="isLoading" [class.fa-spin]="isLoading" [class.fa-user-plus]="!isLoading"></i>
+        {{ isLoading ? 'Inscription en cours...' : 'S\'inscrire' }}
+      </button>
+    </form>
+    
+    <div class="register-footer">
+      <p>Déjà un compte ? <a routerLink="/login">Se connecter</a></p>
+    </div>
+  </div>
+</div>

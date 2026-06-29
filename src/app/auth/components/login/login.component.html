@@ -1,0 +1,61 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1><i class="fas fa-wallet"></i> BadWallet</h1>
+      <p>Connectez-vous à votre compte</p>
+    </div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label><i class="fas fa-phone"></i> Numéro de téléphone</label>
+        <input 
+          type="text" 
+          formControlName="phoneNumber"
+          class="form-control"
+          placeholder="+221 77 XXX XX XX"
+        >
+        <div *ngIf="loginForm.get('phoneNumber')?.invalid && loginForm.get('phoneNumber')?.touched" class="error">
+          <i class="fas fa-exclamation-circle"></i> Numéro de téléphone invalide
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label><i class="fas fa-lock"></i> Mot de passe</label>
+        <input 
+          type="password" 
+          formControlName="password"
+          class="form-control"
+          placeholder="Votre mot de passe"
+        >
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
+          <i class="fas fa-exclamation-circle"></i> Le mot de passe est requis (minimum 6 caractères)
+        </div>
+      </div>
+      
+      <button type="submit" class="btn-primary" [disabled]="loginForm.invalid || isLoading">
+        <i class="fas" [class.fa-spinner]="isLoading" [class.fa-spin]="isLoading" [class.fa-sign-in-alt]="!isLoading"></i>
+        {{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}
+      </button>
+    </form>
+    
+    <div class="login-footer">
+      <p>Pas encore de compte ? <a routerLink="/register">S'inscrire</a></p>
+    </div>
+    
+    <div class="demo-accounts">
+      <p class="demo-title"><i class="fas fa-key"></i> Comptes de démonstration</p>
+      <div class="demo-grid">
+        <div class="demo-item" (click)="fillDemo('CLIENT')">
+          <strong><i class="fas fa-user"></i> Client</strong>
+          <span>+221 77 000 00 01</span>
+          <small>password123</small>
+        </div>
+        <div class="demo-item" (click)="fillDemo('AGENT')">
+          <strong><i class="fas fa-user-tie"></i> Agent</strong>
+          <span>+221 77 000 00 02</span>
+          <small>password123</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

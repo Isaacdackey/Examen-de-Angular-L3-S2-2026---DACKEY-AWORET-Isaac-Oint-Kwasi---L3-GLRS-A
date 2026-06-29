@@ -1,0 +1,104 @@
+<div class="bills-list-container">
+  <div class="list-header">
+    <h2>{{ title }}</h2>
+    <div class="list-actions" *ngIf="showSelection && bills.length > 0">
+      <span class="total-info">
+        Total: {{ getTotalAmount() | xof }}
+      </span>
+      <button 
+        class="btn-pay-selected" 
+        (click)="paySelectedBills()"
+        [disabled]="getSelectedBills().length === 0"
+      >
+        Payer sélectionnées ({{ getSelectedBills().length }})
+      </button>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement des factures...</p>
+  </div>
+
+  <div class="table-container" *ngIf="!loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th *ngIf="showSelection" class="col-select">
+            <input 
+              type="checkbox" 
+              [checked]="selectAll"
+              (change)="toggleSelectAll()"
+              [disabled]="bills.length === 0"
+            >
+          </th>
+          <th>Service</th>
+          <th>Référence</th>
+          <th>Montant</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th *ngIf="showActions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let bill of bills" [class.payee]="bill.payee">
+          <td *ngIf="showSelection" class="col-select">
+            <input 
+              type="checkbox" 
+              [checked]="bill.selected"
+              (change)="toggleBill(bill)"
+              [disabled]="bill.payee"
+            >
+          </td>
+          <td>
+            <span class="service-icon">{{ getServiceIcon(bill.serviceName) }}</span>
+            {{ bill.serviceName }}
+          </td>
+          <td class="bill-ref">{{ bill.reference }}</td>
+          <td class="bill-amount">{{ bill.montant | xof }}</td>
+          <td>{{ bill.dateFacture | dateFormat:'short' }}</td>
+          <td>
+            <span class="status" [class.paid]="bill.payee" [class.unpaid]="!bill.payee">
+              {{ bill.payee ? '✅ Payée' : '⏳ En attente' }}
+            </span>
+          </td>
+          <td *ngIf="showActions">
+            <div class="actions">
+              <button 
+                class="btn-view" 
+                (click)="viewBill.emit(bill)"
+                title="Voir détails"
+              >
+                👁️
+              </button>
+              <button 
+                class="btn-pay" 
+                (click)="billPay.emit(bill)"
+                [disabled]="bill.payee"
+                title="Payer"
+              >
+                💳
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="bills.length === 0">
+          <td [attr.colspan]="showSelection && showActions ? 7 : showSelection || showActions ? 6 : 5" class="empty-state">
+            <span class="empty-icon">📭</span>
+            <p>Aucune facture trouvée</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="list-footer" *ngIf="showSelection && bills.length > 0">
+    <div class="footer-info">
+      <span>{{ bills.length }} facture(s)</span>
+      <span *ngIf="getSelectedBills().length > 0">
+        | {{ getSelectedBills().length }} sélectionnée(s) - 
+        Total: {{ getSelectedAmount() | xof }}
+      </span>
+    </div>
+  </div>
+</div>

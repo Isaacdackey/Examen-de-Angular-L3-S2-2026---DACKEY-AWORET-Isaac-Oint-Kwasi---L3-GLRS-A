@@ -1,0 +1,133 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="header-left">
+      <h1><i class="fas fa-chart-pie"></i> Tableau de bord</h1>
+      <p class="welcome-text"><i class="fas fa-user"></i> Bienvenue sur votre espace BadWallet</p>
+    </div>
+    <button class="btn-refresh" (click)="refreshBalance()">
+      <i class="fas fa-sync-alt"></i> Actualiser
+    </button>
+  </div>
+
+  <div class="balance-card">
+    <div class="balance-content">
+      <div class="balance-info">
+        <span class="balance-label"><i class="fas fa-wallet"></i> Solde actuel</span>
+        <span class="balance-amount">{{ balanceStore.balance() | xof }}</span>
+        <span class="balance-phone"><i class="fas fa-phone"></i> {{ currentPhone | phoneFormat }}</span>
+      </div>
+      <div class="balance-actions">
+        <a routerLink="/transfer" class="action-btn primary">
+          <i class="fas fa-paper-plane"></i> Transfert
+        </a>
+        <a routerLink="/bills" class="action-btn secondary">
+          <i class="fas fa-file-invoice"></i> Factures
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon credit"><i class="fas fa-arrow-down"></i></div>
+      <div class="stat-info">
+        <span class="stat-value credit">{{ stats().totalDeposits | xof }}</span>
+        <span class="stat-label"><i class="fas fa-arrow-down"></i> Total des dépôts</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon debit"><i class="fas fa-arrow-up"></i></div>
+      <div class="stat-info">
+        <span class="stat-value debit">{{ stats().totalWithdrawals | xof }}</span>
+        <span class="stat-label"><i class="fas fa-arrow-up"></i> Total des retraits</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().transactionCount }}</span>
+        <span class="stat-label"><i class="fas fa-exchange-alt"></i> Transactions</span>
+      </div>
+    </div>
+    <div class="stat-card" *ngIf="stats().pendingBills > 0">
+      <div class="stat-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+      <div class="stat-info">
+        <span class="stat-value warning">{{ stats().pendingBills }}</span>
+        <span class="stat-label"><i class="fas fa-file-invoice"></i> Factures impayées</span>
+        <span class="stat-sub">{{ stats().pendingBillsAmount | xof }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <h2><i class="fas fa-bolt"></i> Actions rapides</h2>
+    <div class="actions-grid">
+      <div class="action-card" routerLink="/transfer">
+        <i class="fas fa-paper-plane action-icon"></i>
+        <h3>Transfert</h3>
+        <p><i class="fas fa-arrow-right"></i> Envoyer de l'argent</p>
+      </div>
+      <div class="action-card" routerLink="/bills">
+        <i class="fas fa-file-invoice action-icon"></i>
+        <h3>Factures</h3>
+        <p><i class="fas fa-arrow-right"></i> Payer vos factures</p>
+      </div>
+      <div class="action-card" routerLink="/transactions">
+        <i class="fas fa-history action-icon"></i>
+        <h3>Historique</h3>
+        <p><i class="fas fa-arrow-right"></i> Voir vos transactions</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="recent-section">
+    <div class="section-header">
+      <h2><i class="fas fa-clock"></i> Transactions récentes</h2>
+      <a routerLink="/transactions" class="see-all">Voir tout <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading()">
+      <div class="spinner"><i class="fas fa-spinner fa-spin"></i></div>
+      <p><i class="fas fa-hourglass-half"></i> Chargement...</p>
+    </div>
+
+    <div class="transaction-list" *ngIf="!isLoading() && recentTransactions.length > 0">
+      <div *ngFor="let tx of recentTransactions" class="transaction-item">
+        <div class="tx-icon" [class.credit]="isCredit(tx)" [class.debit]="isDebit(tx)">
+          <i [class]="getTransactionIcon(tx.type)"></i>
+        </div>
+        <div class="tx-details">
+          <div class="tx-description">{{ tx.description }}</div>
+          <div class="tx-date"><i class="fas fa-calendar"></i> {{ tx.createdAt | dateFormat:'full' }}</div>
+        </div>
+        <div class="tx-amount" [class.credit]="isCredit(tx)" [class.debit]="isDebit(tx)">
+          {{ tx.amount | xof }}
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading() && recentTransactions.length === 0">
+      <i class="fas fa-inbox empty-icon"></i>
+      <p>Aucune transaction récente</p>
+    </div>
+  </div>
+
+  <div class="bills-section" *ngIf="pendingBills.length > 0">
+    <div class="section-header">
+      <h2><i class="fas fa-exclamation-circle"></i> Factures impayées</h2>
+      <a routerLink="/bills" class="see-all">Voir tout <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="bills-list">
+      <div *ngFor="let bill of pendingBills.slice(0, 3)" class="bill-item">
+        <span class="bill-icon"><i [class]="getServiceIcon(bill.serviceName)"></i></span>
+        <div class="bill-details">
+          <div class="bill-service">{{ bill.serviceName }}</div>
+          <div class="bill-ref"><i class="fas fa-tag"></i> {{ bill.reference }}</div>
+        </div>
+        <div class="bill-amount">{{ bill.montant | xof }}</div>
+        <a routerLink="/bills" class="bill-pay"><i class="fas fa-credit-card"></i> Payer</a>
+      </div>
+    </div>
+  </div>
+</div>

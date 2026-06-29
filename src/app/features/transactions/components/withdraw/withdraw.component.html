@@ -1,0 +1,57 @@
+<div class="withdraw-container">
+  <div class="page-header">
+    <h1>Effectuer un retrait</h1>
+    <button class="btn-secondary" (click)="cancel()">← Retour</button>
+  </div>
+
+  <div class="form-card">
+    <form [formGroup]="withdrawForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="phoneNumber">Numéro de téléphone *</label>
+        <input 
+          id="phoneNumber"
+          type="text" 
+          formControlName="phoneNumber"
+          class="form-control"
+          [class.invalid]="withdrawForm.get('phoneNumber')?.invalid && withdrawForm.get('phoneNumber')?.touched"
+          placeholder="+221 77 000 00 01"
+        >
+        <div class="error-message" *ngIf="withdrawForm.get('phoneNumber')?.invalid && withdrawForm.get('phoneNumber')?.touched">
+          {{ getErrorMessage('phoneNumber') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Montant à retirer *</label>
+        <div class="input-group">
+          <input 
+            id="amount"
+            type="number" 
+            formControlName="amount"
+            class="form-control"
+            [class.invalid]="withdrawForm.get('amount')?.invalid && withdrawForm.get('amount')?.touched"
+            placeholder="0"
+            min="1"
+            step="100"
+          >
+          <span class="input-suffix">XOF</span>
+        </div>
+        <div class="error-message" *ngIf="withdrawForm.get('amount')?.invalid && withdrawForm.get('amount')?.touched">
+          {{ getErrorMessage('amount') }}
+        </div>
+        <div class="info-text">
+          <span>💡 Frais de retrait: 1% (max 5000 XOF)</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="cancel()">
+          Annuler
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="withdrawForm.invalid || isSubmitting">
+          {{ isSubmitting ? 'Traitement...' : 'Effectuer le retrait' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

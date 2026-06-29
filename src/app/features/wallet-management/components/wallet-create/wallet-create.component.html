@@ -1,0 +1,90 @@
+<div class="wallet-create-container">
+  <div class="page-header">
+    <h1>Créer un nouveau portefeuille</h1>
+    <a routerLink="/admin/wallets" class="btn-secondary">← Retour</a>
+  </div>
+
+  <div class="form-card">
+    <form [formGroup]="walletForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="phoneNumber">Numéro de téléphone *</label>
+        <input 
+          id="phoneNumber"
+          type="text" 
+          formControlName="phoneNumber"
+          class="form-control"
+          [class.invalid]="walletForm.get('phoneNumber')?.invalid && walletForm.get('phoneNumber')?.touched"
+          placeholder="+221 77 000 00 01"
+        >
+        <div class="error-message" *ngIf="walletForm.get('phoneNumber')?.invalid && walletForm.get('phoneNumber')?.touched">
+          {{ getErrorMessage('phoneNumber') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          id="email"
+          type="email" 
+          formControlName="email"
+          class="form-control"
+          [class.invalid]="walletForm.get('email')?.invalid && walletForm.get('email')?.touched"
+          placeholder="client@email.com"
+        >
+        <div class="error-message" *ngIf="walletForm.get('email')?.invalid && walletForm.get('email')?.touched">
+          {{ getErrorMessage('email') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="code">Code du portefeuille *</label>
+        <input 
+          id="code"
+          type="text" 
+          formControlName="code"
+          class="form-control"
+          [class.invalid]="walletForm.get('code')?.invalid && walletForm.get('code')?.touched"
+          placeholder="WLT-0000001"
+        >
+        <div class="error-message" *ngIf="walletForm.get('code')?.invalid && walletForm.get('code')?.touched">
+          {{ getErrorMessage('code') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="initialBalance">Solde initial</label>
+        <input 
+          id="initialBalance"
+          type="number" 
+          formControlName="initialBalance"
+          class="form-control"
+          [class.invalid]="walletForm.get('initialBalance')?.invalid && walletForm.get('initialBalance')?.touched"
+          placeholder="0"
+          min="0"
+          step="100"
+        >
+        <div class="error-message" *ngIf="walletForm.get('initialBalance')?.invalid && walletForm.get('initialBalance')?.touched">
+          {{ getErrorMessage('initialBalance') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="currency">Devise</label>
+        <select id="currency" formControlName="currency" class="form-control">
+          <option value="XOF">XOF - Franc CFA</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="USD">USD - Dollar</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="router.navigate(['/admin/wallets'])">
+          Annuler
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="walletForm.invalid || isSubmitting">
+          {{ isSubmitting ? 'Création en cours...' : 'Créer le portefeuille' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

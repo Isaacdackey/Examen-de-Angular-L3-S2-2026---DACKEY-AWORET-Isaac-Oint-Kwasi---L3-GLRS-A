@@ -1,0 +1,45 @@
+<div class="payment-overlay" *ngIf="isOpen" (click)="onClose()">
+  <div class="payment-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Paiement de la facture</h2>
+      <button class="modal-close" (click)="onClose()">✕</button>
+    </div>
+
+    <div class="modal-body" *ngIf="bill">
+      <div class="bill-info">
+        <div class="info-row">
+          <span class="info-label">Service</span>
+          <span class="info-value">{{ bill.serviceName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Référence</span>
+          <span class="info-value">{{ bill.reference }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Date</span>
+          <span class="info-value">{{ bill.dateFacture | dateFormat:'long' }}</span>
+        </div>
+        <div class="info-row highlight">
+          <span class="info-label">Montant à payer</span>
+          <span class="info-value amount">{{ bill.montant | xof }}</span>
+        </div>
+      </div>
+
+      <div class="balance-info">
+        <span>Solde disponible</span>
+        <span class="balance-amount">{{ balanceStore.balance() | xof }}</span>
+      </div>
+
+      <div class="payment-actions">
+        <button class="btn-secondary" (click)="onClose()">Annuler</button>
+        <button 
+          class="btn-primary" 
+          (click)="payBill()"
+          [disabled]="isPaying || amount > balanceStore.balance()"
+        >
+          {{ isPaying ? 'Paiement en cours...' : 'Confirmer le paiement' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
